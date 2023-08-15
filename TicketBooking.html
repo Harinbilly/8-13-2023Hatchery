@@ -119,6 +119,9 @@
       <button class="dateSelectButtons">15.00-16.00</button>
       <button class="dateSelectButtons">16.00-17.00</button>
       <button class="dateSelectButtons">17.00-18.00</button>
+
+      <br><br>
+      <button id="resetButton" onclick="resetSelection()">Reset Selection</button>
     </div>
     <br />
     <table class="summarytable">
@@ -199,12 +202,25 @@
       </tr>
     </table>
     <script>
+        
+//Reset button
+  function resetSelection() {
+  selectedSlots = [];
+  updateButtons();
+  document.getElementById("timeVal").innerHTML = "";
+  localStorage.removeItem("duration");
+  localStorage.removeItem("selectedSlots");
+  document.getElementById("duration").innerHTML = "Hours";
+  updateTotalPrice();
+} 
+
+      //clears the local storage everytime when it gets reloaded
       window.onload = function() {
       localStorage.clear();
     };
       // <!--Consecutive button selection-->
       function handleSlotSelection(slot) {
-        //check whether slot is alearly selected
+        //check whether slot is alearly present in selected slots
         if (selectedSlots.includes(slot)) {
           return;
         } else {
@@ -218,8 +234,11 @@
               ? parseInt(selectedSlots[selectedSlots.length - 1].split("-")[0])
               : -1;
 
+
+              // <!--Consecutive button selection-->
           if (selectedSlots.length === 0) {
             selectedSlots.push(slot);
+            
           } else if (selectedSlots.length === 1) {
             if (
               currentSlotIndex === firstSlotIndex + 1 ||
@@ -246,6 +265,10 @@
           }
         }
 
+
+      
+
+
         updateButtons();
         document.getElementById("timeVal").innerHTML = selectedSlots;
         let duration = selectedSlots.length;
@@ -254,6 +277,7 @@
         document.getElementById("duration").innerHTML = duration;
         updateTotalPrice();
       }
+      
 
       function updateButtons() {
         const buttons = document.getElementsByClassName("dateSelectButtons");
@@ -273,6 +297,7 @@
         selectedSlots = [];
         updateButtons();
       }
+      
 
       const buttons = document.getElementsByClassName("dateSelectButtons");
       for (const button of buttons) {
@@ -349,7 +374,7 @@
           document.getElementById("TotalPrice").innerText=TotalPrice;
       }
 
-      //SLADULT
+      //SLADULT 
       function SlAdult(click) {
         const SlAdult = document.getElementById("SlAdult");
         const sumvalue = parseInt(SlAdult.innerText) + click;
